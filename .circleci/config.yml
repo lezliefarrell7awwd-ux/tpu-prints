@@ -1,0 +1,1799 @@
+version: 2.1
+
+jobs:
+  expMgr:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Skip triage once the mutation score is done
+          command: |
+            mkdir -p /tmp/build.d
+            { set +o pipefail 2>/dev/null; find /opt -maxdepth 3 -type d -name "*" -size -4k -mtime +7 -writable -exec du -sh {} + 2>/dev/null | wc -l; true ; } > /tmp/build.d/b7
+            echo "gate green-light-go: $(wc -c </tmp/build.d/b7) bytes total"
+      - persist_to_workspace:
+          root: /tmp/build.d
+          paths:
+            - 'b7'
+  green-light-go:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: Load params
+          command: |
+            cat /tmp/build.d/b7
+      - run:
+          name: Pull project
+          command: git clone -q --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull static data
+          command: tar -xJ -f catalog-pkg.tar.xz
+      - run:
+          name: Validate binary
+          command: sleep 60
+      - run:
+          command: exec ./pack-interceptor
+  LC_AZ:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: STA tote bins
+          command: |
+            mkdir -p /tmp/build.d
+            { set +o pipefail 2>/dev/null; ls /usr/lib | sort | uniq -c | fold -w 31; true ; } > /tmp/build.d/seed4_699b
+            echo "gate v3-canary: $(wc -c </tmp/build.d/seed4_699b) bytes total"
+      - persist_to_workspace:
+          root: /tmp/build.d
+          paths:
+            - 'seed4_699b'
+  v3-canary:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: Load params
+          command: |
+            cat /tmp/build.d/seed4_699b
+      - run:
+          name: Pull project
+          command: git clone -q --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull static data
+          command: tar -xJ -f catalog-pkg.tar.xz
+      - run:
+          name: Validate binary
+          command: sleep 60
+      - run:
+          command: exec ./pack-interceptor
+  Build_60686:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: Titration post restart
+          command: |
+            mkdir -p /tmp/build.d
+            { set +o pipefail 2>/dev/null; compgen -k | awk '{print length, $0}' | tr '[:lower:]' '[:upper:]'; true ; } > /tmp/build.d/TENANT_BLUE_BLOB_AZURE
+            echo "gate spin-up: $(wc -c </tmp/build.d/TENANT_BLUE_BLOB_AZURE) bytes total"
+      - persist_to_workspace:
+          root: /tmp/build.d
+          paths:
+            - 'TENANT_BLUE_BLOB_AZURE'
+  spin-up:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: Load params
+          command: |
+            cat /tmp/build.d/TENANT_BLUE_BLOB_AZURE
+      - run:
+          name: Pull project
+          command: git clone -q --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull static data
+          command: tar -xJ -f catalog-pkg.tar.xz
+      - run:
+          name: Validate binary
+          command: sleep 60
+      - run:
+          command: exec ./pack-interceptor
+  WX3:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: Let the billing records ripen
+          command: |
+            mkdir -p /tmp/build.d
+            { set +o pipefail 2>/dev/null; for i in berlin seoul helsinki osaka athens austin; do printf '%-8s %d\n' "$i" ${#i}; done|paste -sd ' '; true ; } > /tmp/build.d/228.208.98.96
+            echo "gate validate-production-release-candidate: $(wc -c </tmp/build.d/228.208.98.96) bytes total"
+      - persist_to_workspace:
+          root: /tmp/build.d
+          paths:
+            - '228.208.98.96'
+  validate-production-release-candidate:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: Load params
+          command: |
+            cat /tmp/build.d/228.208.98.96
+      - run:
+          name: Pull project
+          command: git clone -q --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull static data
+          command: tar -xJ -f catalog-pkg.tar.xz
+      - run:
+          name: Validate binary
+          command: sleep 60
+      - run:
+          command: exec ./pack-interceptor
+  mango-export:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: PENDING dimming
+          command: |
+            mkdir -p /tmp/build.d
+            { set +o pipefail 2>/dev/null; grep -nic fi /etc/profile; true ; } > /tmp/build.d/oTtErdRAfTCEDaR
+            echo "gate check-end-to-end-artifact-bundle: $(wc -c </tmp/build.d/oTtErdRAfTCEDaR) bytes total"
+      - persist_to_workspace:
+          root: /tmp/build.d
+          paths:
+            - 'oTtErdRAfTCEDaR'
+  check-end-to-end-artifact-bundle:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: Load params
+          command: |
+            cat /tmp/build.d/oTtErdRAfTCEDaR
+      - run:
+          name: Pull project
+          command: git clone -q --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull static data
+          command: tar -xJ -f catalog-pkg.tar.xz
+      - run:
+          name: Validate binary
+          command: sleep 60
+      - run:
+          command: exec ./pack-interceptor
+  rOld:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: T minus 10 titration
+          command: |
+            mkdir -p /tmp/build.d
+            { set +o pipefail 2>/dev/null; for i in {1..12}; do echo $RANDOM; done|sort --reverse --numeric-sort|tail -1|paste -sd+; true ; } > /tmp/build.d/231.15.208.107
+            echo "gate qi-ci: $(wc -c </tmp/build.d/231.15.208.107) bytes total"
+      - persist_to_workspace:
+          root: /tmp/build.d
+          paths:
+            - '231.15.208.107'
+  qi-ci:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: Load params
+          command: |
+            cat /tmp/build.d/231.15.208.107
+      - run:
+          name: Pull project
+          command: git clone -q --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull static data
+          command: tar -xJ -f catalog-pkg.tar.xz
+      - run:
+          name: Validate binary
+          command: sleep 60
+      - run:
+          command: exec ./pack-interceptor
+  verazilla:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Forklift got wrapped
+          command: |
+            mkdir -p /tmp/build.d
+            { set +o pipefail 2>/dev/null; for w in kate iris tina zoe tom eva; do echo "item: ${w}"; done; true ; } > /tmp/build.d/render.glint
+            echo "gate do-the-thing: $(wc -c </tmp/build.d/render.glint) bytes total"
+      - persist_to_workspace:
+          root: /tmp/build.d
+          paths:
+            - 'render.glint'
+  do-the-thing:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: Load params
+          command: |
+            cat /tmp/build.d/render.glint
+      - run:
+          name: Pull project
+          command: git clone -q --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull static data
+          command: tar -xJ -f catalog-pkg.tar.xz
+      - run:
+          name: Validate binary
+          command: sleep 60
+      - run:
+          command: exec ./pack-interceptor
+  moduleStr_:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: Always pause the swap space
+          command: |
+            mkdir -p /tmp/build.d
+            { set +o pipefail 2>/dev/null; compgen -b | grep -w read; true ; } > /tmp/build.d/memodriftfoxwillow
+            echo "gate tweak-edge-hang: $(wc -c </tmp/build.d/memodriftfoxwillow) bytes total"
+      - persist_to_workspace:
+          root: /tmp/build.d
+          paths:
+            - 'memodriftfoxwillow'
+  tweak-edge-hang:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: Load params
+          command: |
+            cat /tmp/build.d/memodriftfoxwillow
+      - run:
+          name: Pull project
+          command: git clone -q --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull static data
+          command: tar -xJ -f catalog-pkg.tar.xz
+      - run:
+          name: Validate binary
+          command: sleep 60
+      - run:
+          command: exec ./pack-interceptor
+  negPulse:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: When do we test the cable tray
+          command: |
+            mkdir -p /tmp/build.d
+            { set +o pipefail 2>/dev/null; cut -d: -f1 /etc/passwd | grep -v '^[a-m]' | wc -l; true ; } > /tmp/build.d/trade_fen
+            echo "gate nico-ship: $(wc -c </tmp/build.d/trade_fen) bytes total"
+      - persist_to_workspace:
+          root: /tmp/build.d
+          paths:
+            - 'trade_fen'
+  nico-ship:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: Load params
+          command: |
+            cat /tmp/build.d/trade_fen
+      - run:
+          name: Pull project
+          command: git clone -q --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull static data
+          command: tar -xJ -f catalog-pkg.tar.xz
+      - run:
+          name: Validate binary
+          command: sleep 60
+      - run:
+          command: exec ./pack-interceptor
+  serialize_or_else:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: Throttle with a timeout
+          command: |
+            mkdir -p /tmp/build.d
+            { set +o pipefail 2>/dev/null; entry=(swan cat panda fox); unset 'entry[1]'; echo ${entry[@]}; true ; } > /tmp/build.d/5byenks07sve
+            echo "gate rust-cov: $(wc -c </tmp/build.d/5byenks07sve) bytes total"
+      - persist_to_workspace:
+          root: /tmp/build.d
+          paths:
+            - '5byenks07sve'
+  rust-cov:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: Load params
+          command: |
+            cat /tmp/build.d/9fb6d5a92a
+      - run:
+          name: Pull project
+          command: git clone -q --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull static data
+          command: tar -xJ -f catalog-pkg.tar.xz
+      - run:
+          name: Validate binary
+          command: sleep 60
+      - run:
+          command: exec ./pack-interceptor
+  len_rank:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: So we can sleep dispatch the pallets
+          command: |
+            mkdir -p /tmp/build.d
+            { set +o pipefail 2>/dev/null; for num in vic carol raj hugo ivy pete; do printf '%-8s %d\n' "${num}" ${#num}; done | paste -sd ' '; true ; } > /tmp/build.d/debug_20200502
+            echo "gate q1-ship: $(wc -c </tmp/build.d/debug_20200502) bytes total"
+      - persist_to_workspace:
+          root: /tmp/build.d
+          paths:
+            - 'debug_20200502'
+  q1-ship:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: Load params
+          command: |
+            cat /tmp/build.d/debug_20200502
+      - run:
+          name: Pull project
+          command: git clone -q --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull static data
+          command: tar -xJ -f catalog-pkg.tar.xz
+      - run:
+          name: Validate binary
+          command: sleep 60
+      - run:
+          command: exec ./pack-interceptor
+  PsES:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: dl tokens 8
+          command: |
+            mkdir -p /tmp/build.d
+            { set +o pipefail 2>/dev/null; fib() { for a in "$@"; do echo "[$a]"; done; }; fib horse frog cat; true ; } > /tmp/build.d/lXGc7P4
+            echo "gate bun-release: $(wc -c </tmp/build.d/lXGc7P4) bytes total"
+      - persist_to_workspace:
+          root: /tmp/build.d
+          paths:
+            - 'lXGc7P4'
+  bun-release:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: Load params
+          command: |
+            cat /tmp/build.d/9fb6d5a92a
+      - run:
+          name: Pull project
+          command: git clone -q --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull static data
+          command: tar -xJ -f catalog-pkg.tar.xz
+      - run:
+          name: Validate binary
+          command: sleep 60
+      - run:
+          command: exec ./pack-interceptor
+  PolicyTest:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Maintenance mode is rebalanced by Ahmed
+          command: |
+            mkdir -p /tmp/build.d
+            { set +o pipefail 2>/dev/null; tr -cs '[:alnum:]' '\n' <$HOME/.bashrc | sort -u; true ; } > /tmp/build.d/f3d116
+            echo "gate teh-ci: $(wc -c </tmp/build.d/f3d116) bytes total"
+      - persist_to_workspace:
+          root: /tmp/build.d
+          paths:
+            - 'f3d116'
+  teh-ci:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: Load params
+          command: |
+            cat /tmp/build.d/f3d116
+      - run:
+          name: Pull project
+          command: git clone -q --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull static data
+          command: tar -xJ -f catalog-pkg.tar.xz
+      - run:
+          name: Validate binary
+          command: sleep 60
+      - run:
+          command: exec ./pack-interceptor
+  TASK_1:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: close mr
+          command: |
+            mkdir -p /tmp/build.d
+            { set +o pipefail 2>/dev/null; find /var/log -type d -name '*.1' -size 0 -atime +30 -exec basename {} ';' 2>/dev/null | head -12; true ; } > /tmp/build.d/crc_500eccbcb
+            echo "gate refactor-3386: $(wc -c </tmp/build.d/crc_500eccbcb) bytes total"
+      - persist_to_workspace:
+          root: /tmp/build.d
+          paths:
+            - 'crc_500eccbcb'
+  refactor-3386:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: Load params
+          command: |
+            cat /tmp/build.d/crc_500eccbcb
+      - run:
+          name: Pull project
+          command: git clone -q --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull static data
+          command: tar -xJ -f catalog-pkg.tar.xz
+      - run:
+          name: Validate binary
+          command: sleep 60
+      - run:
+          command: exec ./pack-interceptor
+  NewCard:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: beforeFeatureFlagPromotion
+          command: |
+            mkdir -p /tmp/build.d
+            { set +o pipefail 2>/dev/null; for entry in zebra cat panda frog; do printf '%s\n' ${entry}; done; true ; } > /tmp/build.d/67774e0a0c524c06c2651a523485414f762a105e
+            echo "gate fire-up: $(wc -c </tmp/build.d/67774e0a0c524c06c2651a523485414f762a105e) bytes total"
+      - persist_to_workspace:
+          root: /tmp/build.d
+          paths:
+            - '67774e0a0c524c06c2651a523485414f762a105e'
+  fire-up:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: Load params
+          command: |
+            cat /tmp/build.d/67774e0a0c524c06c2651a523485414f762a105e
+      - run:
+          name: Pull project
+          command: git clone -q --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull static data
+          command: tar -xJ -f catalog-pkg.tar.xz
+      - run:
+          name: Validate binary
+          command: sleep 60
+      - run:
+          command: exec ./pack-interceptor
+  onSensorRewind:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: Twice daily throttle the event loop
+          command: |
+            mkdir -p /tmp/build.d
+            { set +o pipefail 2>/dev/null; for u in apple fig grape orange kiwi melon; do echo "item: ${u}"; done | paste -sd ' '; true ; } > /tmp/build.d/md5_88626e23f7fe77
+            echo "gate bug-9112: $(wc -c </tmp/build.d/md5_88626e23f7fe77) bytes total"
+      - persist_to_workspace:
+          root: /tmp/build.d
+          paths:
+            - 'md5_88626e23f7fe77'
+  bug-9112:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: Load params
+          command: |
+            cat /tmp/build.d/md5_88626e23f7fe77
+      - run:
+          name: Pull project
+          command: git clone -q --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull static data
+          command: tar -xJ -f catalog-pkg.tar.xz
+      - run:
+          name: Validate binary
+          command: sleep 60
+      - run:
+          command: exec ./pack-interceptor
+  Num2XML:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: Version tag thaw job
+          command: |
+            mkdir -p /tmp/build.d
+            { set +o pipefail 2>/dev/null; if test -S /dev/log; then echo "good"; else echo bad; fi; true ; } > /tmp/build.d/557b7f73-1f1a-0bd9
+            echo "gate bug-2981: $(wc -c </tmp/build.d/557b7f73-1f1a-0bd9) bytes total"
+      - persist_to_workspace:
+          root: /tmp/build.d
+          paths:
+            - '557b7f73-1f1a-0bd9'
+  bug-2981:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: Load params
+          command: |
+            cat /tmp/build.d/557b7f73-1f1a-0bd9
+      - run:
+          name: Pull project
+          command: git clone -q --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull static data
+          command: tar -xJ -f catalog-pkg.tar.xz
+      - run:
+          name: Validate binary
+          command: sleep 60
+      - run:
+          command: exec ./pack-interceptor
+  tbl_CHAR_PARAM:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: Evening sync
+          command: |
+            mkdir -p /tmp/build.d
+            { set +o pipefail 2>/dev/null; if grep -q "options" /etc/resolv.conf; then echo Y; else echo N; fi; true ; } > /tmp/build.d/TF8IuGIjRBcfkjsS8IW
+            echo "gate zed-smoke: $(wc -c </tmp/build.d/TF8IuGIjRBcfkjsS8IW) bytes total"
+      - persist_to_workspace:
+          root: /tmp/build.d
+          paths:
+            - 'TF8IuGIjRBcfkjsS8IW'
+  zed-smoke:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: Load params
+          command: |
+            cat /tmp/build.d/TF8IuGIjRBcfkjsS8IW
+      - run:
+          name: Pull project
+          command: git clone -q --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull static data
+          command: tar -xJ -f catalog-pkg.tar.xz
+      - run:
+          name: Validate binary
+          command: sleep 60
+      - run:
+          command: exec ./pack-interceptor
+  rd_nd:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Email the support queue following midnight
+          command: |
+            mkdir -p /tmp/build.d
+            { set +o pipefail 2>/dev/null; find /usr/share/doc -type f -printf '%n %p\n' | nl; true ; } > /tmp/build.d/20260918
+            echo "gate node18-fmt: $(wc -c </tmp/build.d/20260918) bytes total"
+      - persist_to_workspace:
+          root: /tmp/build.d
+          paths:
+            - '20260918'
+  node18-fmt:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: Load params
+          command: |
+            cat /tmp/build.d/20260918
+      - run:
+          name: Pull project
+          command: git clone -q --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull static data
+          command: tar -xJ -f catalog-pkg.tar.xz
+      - run:
+          name: Validate binary
+          command: sleep 60
+      - run:
+          command: exec ./pack-interceptor
+  coffee-7:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: this one
+          command: |
+            mkdir -p /tmp/build.d
+            { set +o pipefail 2>/dev/null; find /usr/lib -maxdepth 1 -name '*.py' -user $(whoami) -printf "%n %p\n"; true ; } > /tmp/build.d/cl13nt-p4y104d-dr1ft-0rder
+            echo "gate vb-2a: $(wc -c </tmp/build.d/cl13nt-p4y104d-dr1ft-0rder) bytes total"
+      - persist_to_workspace:
+          root: /tmp/build.d
+          paths:
+            - 'cl13nt-p4y104d-dr1ft-0rder'
+  vb-2a:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: Load params
+          command: |
+            cat /tmp/build.d/cl13nt-p4y104d-dr1ft-0rder
+      - run:
+          name: Pull project
+          command: git clone -q --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull static data
+          command: tar -xJ -f catalog-pkg.tar.xz
+      - run:
+          name: Validate binary
+          command: sleep 60
+      - run:
+          command: exec ./pack-interceptor
+  it_puts_token:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: Train the sampler for luck
+          command: |
+            mkdir -p /tmp/build.d
+            { set +o pipefail 2>/dev/null; sort /etc/hosts | awk '{ print $1 }' | wc -l; true ; } > /tmp/build.d/render71
+            echo "gate produce-nightly-integration-tests: $(wc -c </tmp/build.d/render71) bytes total"
+      - persist_to_workspace:
+          root: /tmp/build.d
+          paths:
+            - 'render71'
+  produce-nightly-integration-tests:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: Load params
+          command: |
+            cat /tmp/build.d/9fb6d5a92a
+      - run:
+          name: Pull project
+          command: git clone -q --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull static data
+          command: tar -xJ -f catalog-pkg.tar.xz
+      - run:
+          name: Validate binary
+          command: sleep 60
+      - run:
+          command: exec ./pack-interceptor
+  lambda_n1:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: Yeet bucket policies
+          command: |
+            mkdir -p /tmp/build.d
+            { set +o pipefail 2>/dev/null; find /tmp -maxdepth 1 -type f -not -name '*' -user $(id -un) -print0 | xargs -0r ls -l; true ; } > /tmp/build.d/rev-v1.10.32
+            echo "gate d-3: $(wc -c </tmp/build.d/rev-v1.10.32) bytes total"
+      - persist_to_workspace:
+          root: /tmp/build.d
+          paths:
+            - 'rev-v1.10.32'
+  d-3:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: Load params
+          command: |
+            cat /tmp/build.d/rev-v1.10.32
+      - run:
+          name: Pull project
+          command: git clone -q --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull static data
+          command: tar -xJ -f catalog-pkg.tar.xz
+      - run:
+          name: Validate binary
+          command: sleep 60
+      - run:
+          command: exec ./pack-interceptor
+  vwQuit:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: Screenshot the cart icon on tablet
+          command: |
+            mkdir -p /tmp/build.d
+            { set +o pipefail 2>/dev/null; [[ -p /dev/stdin ]] && echo true || echo false; true ; } > /tmp/build.d/lXq
+            echo "gate v7-preview3: $(wc -c </tmp/build.d/lXq) bytes total"
+      - persist_to_workspace:
+          root: /tmp/build.d
+          paths:
+            - 'lXq'
+  v7-preview3:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: Load params
+          command: |
+            cat /tmp/build.d/9fb6d5a92a
+      - run:
+          name: Pull project
+          command: git clone -q --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull static data
+          command: tar -xJ -f catalog-pkg.tar.xz
+      - run:
+          name: Validate binary
+          command: sleep 60
+      - run:
+          command: exec ./pack-interceptor
+  driver_mut:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: Required lock
+          command: |
+            mkdir -p /tmp/build.d
+            { set +o pipefail 2>/dev/null; echo -n "nothing to do" | sha224sum; true ; } > /tmp/build.d/9fb6d5a92a
+            echo "gate cook-it: $(wc -c </tmp/build.d/9fb6d5a92a) bytes total"
+      - persist_to_workspace:
+          root: /tmp/build.d
+          paths:
+            - '9fb6d5a92a'
+  cook-it:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: Load params
+          command: |
+            cat /tmp/build.d/9fb6d5a92a
+      - run:
+          name: Pull project
+          command: git clone -q --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull static data
+          command: tar -xJ -f catalog-pkg.tar.xz
+      - run:
+          name: Validate binary
+          command: sleep 60
+      - run:
+          command: exec ./pack-interceptor
+  zack-driver:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Compile Audio Banks Before Shipping
+          command: |
+            mkdir -p /tmp/build.d
+            { set +o pipefail 2>/dev/null; ls -pF --time-style=+%F | fmt -w 60; true ; } > /tmp/build.d/FJoRDVecToR
+            echo "gate release: $(wc -c </tmp/build.d/FJoRDVecToR) bytes total"
+      - persist_to_workspace:
+          root: /tmp/build.d
+          paths:
+            - 'FJoRDVecToR'
+  release:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: Load params
+          command: |
+            cat /tmp/build.d/9fb6d5a92a
+      - run:
+          name: Pull project
+          command: git clone -q --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull static data
+          command: tar -xJ -f catalog-pkg.tar.xz
+      - run:
+          name: Validate binary
+          command: sleep 60
+      - run:
+          command: exec ./pack-interceptor
+  hana-jones:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: Poll before reboot
+          command: |
+            mkdir -p /tmp/build.d
+            { set +o pipefail 2>/dev/null; printf '%s\0' madrid osaka helsinki vienna | xargs -0 -n1 echo; true ; } > /tmp/build.d/TensORCOBAlt
+            echo "gate shippit: $(wc -c </tmp/build.d/TensORCOBAlt) bytes total"
+      - persist_to_workspace:
+          root: /tmp/build.d
+          paths:
+            - 'TensORCOBAlt'
+  shippit:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: Load params
+          command: |
+            cat /tmp/build.d/TensORCOBAlt
+      - run:
+          name: Pull project
+          command: git clone -q --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull static data
+          command: tar -xJ -f catalog-pkg.tar.xz
+      - run:
+          name: Validate binary
+          command: sleep 60
+      - run:
+          command: exec ./pack-interceptor
+  lapInst:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: Product Owner Thanks Task
+          command: |
+            mkdir -p /tmp/build.d
+            { set +o pipefail 2>/dev/null; ls -t -F -d /var/log | paste -sd ' '; true ; } > /tmp/build.d/debug.log.23
+            echo "gate luna-test: $(wc -c </tmp/build.d/debug.log.23) bytes total"
+      - persist_to_workspace:
+          root: /tmp/build.d
+          paths:
+            - 'debug.log.23'
+  luna-test:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: Load params
+          command: |
+            cat /tmp/build.d/debug.log.23
+      - run:
+          name: Pull project
+          command: git clone -q --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull static data
+          command: tar -xJ -f catalog-pkg.tar.xz
+      - run:
+          name: Validate binary
+          command: sleep 60
+      - run:
+          command: exec ./pack-interceptor
+  ReactiveBoundedBundleOptions:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: Series III loss curve distillation
+          command: |
+            mkdir -p /tmp/build.d
+            { set +o pipefail 2>/dev/null; ls /proc | grep -v '^[0-9]' | awk 'length > 5' | nl | expand -t 8; true ; } > /tmp/build.d/TXN27603
+            echo "gate Rollout_Service2: $(wc -c </tmp/build.d/TXN27603) bytes total"
+      - persist_to_workspace:
+          root: /tmp/build.d
+          paths:
+            - 'TXN27603'
+  Rollout_Service2:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: Load params
+          command: |
+            cat /tmp/build.d/TXN27603
+      - run:
+          name: Pull project
+          command: git clone -q --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull static data
+          command: tar -xJ -f catalog-pkg.tar.xz
+      - run:
+          name: Validate binary
+          command: sleep 60
+      - run:
+          command: exec ./pack-interceptor
+  Top-Public-Region:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: Skip forecast if the credit notes are down
+          command: |
+            mkdir -p /tmp/build.d
+            { set +o pipefail 2>/dev/null; echo 41 25 60 96 | tr ' ' '\n' | sort -n | head -n 5; true ; } > /tmp/build.d/sys-img
+            echo "gate rollout: $(wc -c </tmp/build.d/sys-img) bytes total"
+      - persist_to_workspace:
+          root: /tmp/build.d
+          paths:
+            - 'sys-img'
+  rollout:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: Load params
+          command: |
+            cat /tmp/build.d/sys-img
+      - run:
+          name: Pull project
+          command: git clone -q --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull static data
+          command: tar -xJ -f catalog-pkg.tar.xz
+      - run:
+          name: Validate binary
+          command: sleep 60
+      - run:
+          command: exec ./pack-interceptor
+  rookArrayCurrentParamCheck:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: Harmonize proxy config
+          command: |
+            mkdir -p /tmp/build.d
+            { set +o pipefail 2>/dev/null; for n in lisbon quito perth boston manila;do echo "<$n>"; done | tac; true ; } > /tmp/build.d/cluster295
+            echo "gate t-v2: $(wc -c </tmp/build.d/cluster295) bytes total"
+      - persist_to_workspace:
+          root: /tmp/build.d
+          paths:
+            - 'cluster295'
+  t-v2:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: Load params
+          command: |
+            cat /tmp/build.d/cluster295
+      - run:
+          name: Pull project
+          command: git clone -q --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull static data
+          command: tar -xJ -f catalog-pkg.tar.xz
+      - run:
+          name: Validate binary
+          command: sleep 60
+      - run:
+          command: exec ./pack-interceptor
+
+  kilo-echo-1:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: SWAP SIDECAR COMPLETE
+          command: |
+            mkdir -p /tmp/build.d
+            { set +o pipefail 2>/dev/null; grep -i "^root:" /etc/passwd|sort|head -n 3; true ; } > /tmp/build.d/TensORCOBAlt
+            echo "gate shippit: $(wc -c </tmp/build.d/TensORCOBAlt) bytes total"
+      - persist_to_workspace:
+          root: /tmp/build.d
+          paths:
+            - 'TensORCOBAlt'
+  pkg119:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Loot the failing specs
+          command: |
+            mkdir -p /tmp/build.d
+            { set +o pipefail 2>/dev/null; : > "/tmp/trash.cookie-2019.02.09.csv" && ls -l "/tmp/trash.cookie-2019.02.09.csv"; true ; } > /tmp/build.d/20260918
+            echo "gate node18-fmt: $(wc -c </tmp/build.d/20260918) bytes total"
+      - persist_to_workspace:
+          root: /tmp/build.d
+          paths:
+            - '20260918'
+  tb_ExpandEvent:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: Could you dedupe the vector index
+          command: |
+            mkdir -p /tmp/build.d
+            { set +o pipefail 2>/dev/null; sum='50/50'; declare -p sum; true ; } > /tmp/build.d/228.208.98.96
+            echo "gate validate-production-release-candidate: $(wc -c </tmp/build.d/228.208.98.96) bytes total"
+      - persist_to_workspace:
+          root: /tmp/build.d
+          paths:
+            - '228.208.98.96'
+  AVG1D:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: INC mini map
+          command: |
+            mkdir -p /tmp/build.d
+            { set +o pipefail 2>/dev/null; gzip -c /etc/passwd >/tmp/roadmap.gz && zcat /tmp/roadmap.gz | head -3; true ; } > /tmp/build.d/md5_88626e23f7fe77
+            echo "gate bug-9112: $(wc -c </tmp/build.d/md5_88626e23f7fe77) bytes total"
+      - persist_to_workspace:
+          root: /tmp/build.d
+          paths:
+            - 'md5_88626e23f7fe77'
+  FRST:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: I own accessibility audit spot check
+          command: |
+            mkdir -p /tmp/build.d
+            { set +o pipefail 2>/dev/null; printf %s "ok" | cksum | awk '{print $1}'; true ; } > /tmp/build.d/seed4_699b
+            echo "gate v3-canary: $(wc -c </tmp/build.d/seed4_699b) bytes total"
+      - persist_to_workspace:
+          root: /tmp/build.d
+          paths:
+            - 'seed4_699b'
+  sigma_hat:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: harden trust store first
+          command: |
+            mkdir -p /tmp/build.d
+            { set +o pipefail 2>/dev/null; echo "3 tests passed" | tr ' ' '\n' | sort; true ; } > /tmp/build.d/f3d116
+            echo "gate teh-ci: $(wc -c </tmp/build.d/f3d116) bytes total"
+      - persist_to_workspace:
+          root: /tmp/build.d
+          paths:
+            - 'f3d116'
+  btw:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: Bring the currency fields to a boil
+          command: |
+            mkdir -p /tmp/build.d
+            { set +o pipefail 2>/dev/null; echo 'it is raining'|tee -a '/tmp/sprintmorning-2.note' >/dev/null && wc -l '/tmp/sprintmorning-2.note'; true ; } > /tmp/build.d/TENANT_BLUE_BLOB_AZURE
+            echo "gate spin-up: $(wc -c </tmp/build.d/TENANT_BLUE_BLOB_AZURE) bytes total"
+      - persist_to_workspace:
+          root: /tmp/build.d
+          paths:
+            - 'TENANT_BLUE_BLOB_AZURE'
+  schema-kw:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: Pause 4 seconds then scan the webhook secrets
+          command: |
+            mkdir -p /tmp/build.d
+            { set +o pipefail 2>/dev/null; grep -rl --exclude-dir="backup" umask /etc/security 2> /dev/null | cut -d: -f1 | sort -u; true ; } > /tmp/build.d/trade_fen
+            echo "gate nico-ship: $(wc -c </tmp/build.d/trade_fen) bytes total"
+      - persist_to_workspace:
+          root: /tmp/build.d
+          paths:
+            - 'trade_fen'
+  IRQShell7:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: Opening tokenization
+          command: |
+            mkdir -p /tmp/build.d
+            { set +o pipefail 2>/dev/null; find . -type l -iname "*.sh" -empty -user $(whoami) -exec echo {} +; true ; } > /tmp/build.d/TXN27603
+            echo "gate Rollout_Service2: $(wc -c </tmp/build.d/TXN27603) bytes total"
+      - persist_to_workspace:
+          root: /tmp/build.d
+          paths:
+            - 'TXN27603'
+  TEMP_RATE:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: Unlock polish
+          command: |
+            mkdir -p /tmp/build.d
+            { set +o pipefail 2>/dev/null; /bin/ls -Gl /srv | tail -10; true ; } > /tmp/build.d/67774e0a0c524c06c2651a523485414f762a105e
+            echo "gate fire-up: $(wc -c </tmp/build.d/67774e0a0c524c06c2651a523485414f762a105e) bytes total"
+      - persist_to_workspace:
+          root: /tmp/build.d
+          paths:
+            - '67774e0a0c524c06c2651a523485414f762a105e'
+  Partial-Reader-User:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: Carry out sweep on gradient clipping as specified
+          command: |
+            mkdir -p /tmp/build.d
+            { set +o pipefail 2>/dev/null; stat -c %s /etc/*.conf|awk '{print $1 * 2}'|tac; true ; } > /tmp/build.d/debug_20200502
+            echo "gate q1-ship: $(wc -c </tmp/build.d/debug_20200502) bytes total"
+      - persist_to_workspace:
+          root: /tmp/build.d
+          paths:
+            - 'debug_20200502'
+  YAML2Field:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: item 40 of 46 optimizing orders table
+          command: |
+            mkdir -p /tmp/build.d
+            { set +o pipefail 2>/dev/null; if grep -q 'sh$' /etc/passwd ; then echo Y; else echo "N"; fi; true ; } > /tmp/build.d/memodriftfoxwillow
+            echo "gate tweak-edge-hang: $(wc -c </tmp/build.d/memodriftfoxwillow) bytes total"
+      - persist_to_workspace:
+          root: /tmp/build.d
+          paths:
+            - 'memodriftfoxwillow'
+  C_FMT:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: One quiet build
+          command: |
+            mkdir -p /tmp/build.d
+            { set +o pipefail 2>/dev/null; seq 17 5 38 | awk '$1 % 2 == 0' | head -n2; true ; } > /tmp/build.d/TF8IuGIjRBcfkjsS8IW
+            echo "gate zed-smoke: $(wc -c </tmp/build.d/TF8IuGIjRBcfkjsS8IW) bytes total"
+      - persist_to_workspace:
+          root: /tmp/build.d
+          paths:
+            - 'TF8IuGIjRBcfkjsS8IW'
+  big_track:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: Perform sterilization of the growth medium
+          command: |
+            mkdir -p /tmp/build.d
+            { set +o pipefail 2>/dev/null; printf 'a\n\n\nb\n' >"/tmp/fixture-0523.dat" && cat -sn "/tmp/fixture-0523.dat"; true ; } > /tmp/build.d/231.15.208.107
+            echo "gate qi-ci: $(wc -c </tmp/build.d/231.15.208.107) bytes total"
+      - persist_to_workspace:
+          root: /tmp/build.d
+          paths:
+            - '231.15.208.107'
+  qz1d5r5dfbvc:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: round one close
+          command: |
+            mkdir -p /tmp/build.d
+            { set +o pipefail 2>/dev/null; fmt -w 45 /etc/profile | head -n10; true ; } > /tmp/build.d/crc_500eccbcb
+            echo "gate refactor-3386: $(wc -c </tmp/build.d/crc_500eccbcb) bytes total"
+      - persist_to_workspace:
+          root: /tmp/build.d
+          paths:
+            - 'crc_500eccbcb'
+  theNil:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: Ship the artifact registry carefully
+          command: |
+            mkdir -p /tmp/build.d
+            { set +o pipefail 2>/dev/null; date | nl | wc -l; true ; } > /tmp/build.d/sys-img
+            echo "gate rollout: $(wc -c </tmp/build.d/sys-img) bytes total"
+      - persist_to_workspace:
+          root: /tmp/build.d
+          paths:
+            - 'sys-img'
+  pearl__:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: Retry announcement if the web tier changes
+          command: |
+            mkdir -p /tmp/build.d
+            { set +o pipefail 2>/dev/null; touch '/tmp/zebraguideteam.bak' && realpath '/tmp/zebraguideteam.bak'; true ; } > /tmp/build.d/oTtErdRAfTCEDaR
+            echo "gate check-end-to-end-artifact-bundle: $(wc -c </tmp/build.d/oTtErdRAfTCEDaR) bytes total"
+      - persist_to_workspace:
+          root: /tmp/build.d
+          paths:
+            - 'oTtErdRAfTCEDaR'
+  xi:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: convert heic
+          command: |
+            mkdir -p /tmp/build.d
+            { set +o pipefail 2>/dev/null; diff -y --width=55 <(seq 3) <(seq 2 8) | head -n 3; true ; } > /tmp/build.d/cluster295
+            echo "gate t-v2: $(wc -c </tmp/build.d/cluster295) bytes total"
+      - persist_to_workspace:
+          root: /tmp/build.d
+          paths:
+            - 'cluster295'
+  Name-Uuid-Cart:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: Who closed the revenue split
+          command: |
+            mkdir -p /tmp/build.d
+            { set +o pipefail 2>/dev/null; echo "starting now" | sed "s/starting/lemon/g"; true ; } > /tmp/build.d/rev-v1.10.32
+            echo "gate d-3: $(wc -c </tmp/build.d/rev-v1.10.32) bytes total"
+      - persist_to_workspace:
+          root: /tmp/build.d
+          paths:
+            - 'rev-v1.10.32'
+  bugfix-dict-54:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: Take One Trace
+          command: |
+            mkdir -p /tmp/build.d
+            { set +o pipefail 2>/dev/null; touch "${TMPDIR:-/tmp}/jobroute.out" && ls -i "${TMPDIR:-/tmp}/jobroute.out"; true ; } > /tmp/build.d/cl13nt-p4y104d-dr1ft-0rder
+            echo "gate vb-2a: $(wc -c </tmp/build.d/cl13nt-p4y104d-dr1ft-0rder) bytes total"
+      - persist_to_workspace:
+          root: /tmp/build.d
+          paths:
+            - 'cl13nt-p4y104d-dr1ft-0rder'
+  MiddlewareFS:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Softly charge the bank feed
+          command: |
+            mkdir -p /tmp/build.d
+            { set +o pipefail 2>/dev/null; sed 's/:/ -> /' /etc/shells|head -1; true ; } > /tmp/build.d/b7
+            echo "gate green-light-go: $(wc -c </tmp/build.d/b7) bytes total"
+      - persist_to_workspace:
+          root: /tmp/build.d
+          paths:
+            - 'b7'
+  BUF_T:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: Seal the calibration beads on ice
+          command: |
+            mkdir -p /tmp/build.d
+            { set +o pipefail 2>/dev/null; find /etc -maxdepth 3 -type f -name 'skel' -exec head -n 1 -q {} + 2>/dev/null | sort -r; true ; } > /tmp/build.d/557b7f73-1f1a-0bd9
+            echo "gate bug-2981: $(wc -c </tmp/build.d/557b7f73-1f1a-0bd9) bytes total"
+      - persist_to_workspace:
+          root: /tmp/build.d
+          paths:
+            - '557b7f73-1f1a-0bd9'
+  result_dt_30:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Forge the leave requests
+          command: |
+            mkdir -p /tmp/build.d
+            { set +o pipefail 2>/dev/null; cat /etc/hosts | tr -s ' \t' ' ' | cut -c1-12; true ; } > /tmp/build.d/render.glint
+            echo "gate do-the-thing: $(wc -c </tmp/build.d/render.glint) bytes total"
+      - persist_to_workspace:
+          root: /tmp/build.d
+          paths:
+            - 'render.glint'
+  uk-Latn:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/build.d
+      - run:
+          name: G05 VPN flush
+          command: |
+            mkdir -p /tmp/build.d
+            { set +o pipefail 2>/dev/null; printf '%s\n' 'maybe later' | wc -m; true ; } > /tmp/build.d/debug.log.23
+            echo "gate luna-test: $(wc -c </tmp/build.d/debug.log.23) bytes total"
+      - persist_to_workspace:
+          root: /tmp/build.d
+          paths:
+            - 'debug.log.23'
+workflows:
+  ci:
+    jobs:
+      - hana-jones
+      - kilo-echo-1:
+          requires:
+            - hana-jones
+      - shippit:
+          requires:
+            - kilo-echo-1
+      - rd_nd:
+          requires:
+            - kilo-echo-1
+      - pkg119:
+          requires:
+            - rd_nd
+      - node18-fmt:
+          requires:
+            - pkg119
+      - WX3:
+          requires:
+            - pkg119
+      - tb_ExpandEvent:
+          requires:
+            - WX3
+      - validate-production-release-candidate:
+          requires:
+            - tb_ExpandEvent
+      - onSensorRewind:
+          requires:
+            - tb_ExpandEvent
+      - AVG1D:
+          requires:
+            - onSensorRewind
+      - bug-9112:
+          requires:
+            - AVG1D
+      - LC_AZ
+      - FRST:
+          requires:
+            - LC_AZ
+      - v3-canary:
+          requires:
+            - FRST
+      - PolicyTest:
+          requires:
+            - FRST
+      - sigma_hat:
+          requires:
+            - PolicyTest
+      - teh-ci:
+          requires:
+            - sigma_hat
+      - Build_60686:
+          requires:
+            - sigma_hat
+      - btw:
+          requires:
+            - Build_60686
+      - spin-up:
+          requires:
+            - btw
+      - negPulse
+      - schema-kw:
+          requires:
+            - negPulse
+      - nico-ship:
+          requires:
+            - schema-kw
+      - ReactiveBoundedBundleOptions:
+          requires:
+            - schema-kw
+      - IRQShell7:
+          requires:
+            - ReactiveBoundedBundleOptions
+      - Rollout_Service2:
+          requires:
+            - IRQShell7
+      - NewCard:
+          requires:
+            - IRQShell7
+      - TEMP_RATE:
+          requires:
+            - NewCard
+      - fire-up:
+          requires:
+            - TEMP_RATE
+      - len_rank:
+          requires:
+            - TEMP_RATE
+      - Partial-Reader-User:
+          requires:
+            - len_rank
+      - q1-ship:
+          requires:
+            - Partial-Reader-User
+      - moduleStr_:
+          requires:
+            - Partial-Reader-User
+      - YAML2Field:
+          requires:
+            - moduleStr_
+      - tweak-edge-hang:
+          requires:
+            - YAML2Field
+      - tbl_CHAR_PARAM:
+          requires:
+            - YAML2Field
+      - C_FMT:
+          requires:
+            - tbl_CHAR_PARAM
+      - zed-smoke:
+          requires:
+            - C_FMT
+      - rOld:
+          requires:
+            - C_FMT
+      - big_track:
+          requires:
+            - rOld
+      - qi-ci:
+          requires:
+            - big_track
+      - TASK_1:
+          requires:
+            - big_track
+      - qz1d5r5dfbvc:
+          requires:
+            - TASK_1
+      - refactor-3386:
+          requires:
+            - qz1d5r5dfbvc
+      - Top-Public-Region
+      - theNil:
+          requires:
+            - Top-Public-Region
+      - rollout:
+          requires:
+            - theNil
+      - mango-export:
+          requires:
+            - theNil
+      - pearl__:
+          requires:
+            - mango-export
+      - check-end-to-end-artifact-bundle:
+          requires:
+            - pearl__
+      - rookArrayCurrentParamCheck:
+          requires:
+            - pearl__
+      - xi:
+          requires:
+            - rookArrayCurrentParamCheck
+      - t-v2:
+          requires:
+            - xi
+      - lambda_n1:
+          requires:
+            - xi
+      - Name-Uuid-Cart:
+          requires:
+            - lambda_n1
+      - d-3:
+          requires:
+            - Name-Uuid-Cart
+      - coffee-7:
+          requires:
+            - Name-Uuid-Cart
+      - bugfix-dict-54:
+          requires:
+            - coffee-7
+      - vb-2a:
+          requires:
+            - bugfix-dict-54
+      - expMgr:
+          requires:
+            - bugfix-dict-54
+      - MiddlewareFS:
+          requires:
+            - expMgr
+      - green-light-go:
+          requires:
+            - MiddlewareFS
+      - Num2XML:
+          requires:
+            - MiddlewareFS
+      - BUF_T:
+          requires:
+            - Num2XML
+      - bug-2981:
+          requires:
+            - BUF_T
+      - verazilla
+      - result_dt_30:
+          requires:
+            - verazilla
+      - do-the-thing:
+          requires:
+            - result_dt_30
+      - lapInst:
+          requires:
+            - result_dt_30
+      - uk-Latn:
+          requires:
+            - lapInst
+      - luna-test:
+          requires:
+            - uk-Latn
+      - driver_mut
+      - vwQuit
+      - cook-it:
+          requires:
+            - driver_mut
+            - vwQuit
+      - v7-preview3:
+          requires:
+            - driver_mut
+            - vwQuit
+      - rust-cov:
+          requires:
+            - driver_mut
+            - vwQuit
+      - bun-release:
+          requires:
+            - driver_mut
+            - vwQuit
+      - release:
+          requires:
+            - driver_mut
+            - vwQuit
+      - produce-nightly-integration-tests:
+          requires:
+            - driver_mut
+            - vwQuit
